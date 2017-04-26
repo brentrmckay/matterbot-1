@@ -167,9 +167,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="challenges.h" />
     <ClInclude Include="EchoCommand.h" />
     <ClInclude Include="ConsoleLogger.h" />
-    <ClInclude Include="ReverseCommand.h" />
+    <ClInclude Include="getpassword.h" />
+    <ClInclude Include="getpoints.h" />
+    <ClInclude Include="Rivestment.h" />
+    <ClInclude Include="RivestmentPrompts.h" />
+    <ClInclude Include="scraps.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

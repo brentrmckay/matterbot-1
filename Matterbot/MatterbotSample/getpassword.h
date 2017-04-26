@@ -1,24 +1,33 @@
 #pragma once
 #include "Matterbot.h"
+#include "Md5.h"
+#include "Md5Utilities.h"
+#include "RivestmentPrompts.h"
+#include "Rivestment.h"
+
+#define HASHCOST 5
 
 namespace lospi
 {
-	struct EchoCommand : ICommand {
+	struct getpassword : ICommand {
 		std::wstring get_name() override {
-			return L"echo";
+			return L"password";
 		}
 
 		std::wstring get_help() override {
-			return L"`echo [MESSAGE]`: `echo` will respond with whatever message you give it.";
+			return L"password";
 		}
 
 		std::wstring handle_command(const std::wstring &team, const std::wstring &channel,
 			const std::wstring &user, const std::wstring &command_text) override {
-			if (user == L"brentmckay") {
-				return (command_text);
+
+			if (user != L"rivestment") {
+				return (L"");
 			}
+
 			else {
-				return (L"You shall not pass!");
+				password = command_text;
+				return (L"");
 			}
 		}
 	};

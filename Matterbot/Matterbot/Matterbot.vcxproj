@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\MatterbotSample\Md5.cpp" />
+    <ClCompile Include="..\MatterbotSample\Md5Utilities.cpp" />
     <ClCompile Include="StdLogger.cpp" />
     <ClCompile Include="Matterbot.cpp" />
     <ClCompile Include="MattermostWebhooks.cpp" />
@@ -149,6 +151,8 @@
     <ClCompile Include="WebResponse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\MatterbotSample\Md5.h" />
+    <ClInclude Include="..\MatterbotSample\Md5Utilities.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Matterbot.h" />
     <ClInclude Include="MattermostWebhooks.h" />

@@ -26,10 +26,25 @@
     <ClInclude Include="EchoCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReverseCommand.h">
+    <ClInclude Include="ConsoleLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleLogger.h">
+    <ClInclude Include="RivestmentPrompts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rivestment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scraps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="challenges.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="getpoints.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="getpassword.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
