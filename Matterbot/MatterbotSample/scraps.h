@@ -1,11 +1,7 @@
 #pragma once
 #include "Matterbot.h"
-#include "Md5.h"
-#include "Md5Utilities.h"
-#include "RivestmentPrompts.h"
 #include "Rivestment.h"
-
-#define HASHCOST 5
+#include <thread>
 
 namespace lospi
 {
@@ -14,21 +10,28 @@ namespace lospi
 		std::wstring get_name() override {
 			return L"scraps";
 		}
-
 		std::wstring get_help() override {
-			return L"scraps";
+			return L"";
 		}
-
 		std::wstring handle_command(const std::wstring &team, const std::wstring &channel,
 			const std::wstring &user, const std::wstring &command_text) override {
-
-			if (user != L"rivestment") {
+			if (inGame == false) {
+				return (L"Not currently registered in Rivestment. Enter by inputting 'mcbot rivestment begin'");
 			}
-
-			else if (command_text.size()) {
-				bot->post_message(findHash(parseInput(command_text)));
+			else {
+				if (user != L"rivestment") {
+					return L"";
+				}
+				else if (findHash(parseInput(command_text)).size()) {
+					lastRunTime = time(0);
+					bot->post_message(L"rivestment try" + findHash(parseInput(command_text)));
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+				bot->post_message(L"rivestment points");
+				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+				bot->post_message(L"rivestment challenge " + std::to_wstring(findRange(level, points)));
+				return (L"");
 			}
-			return (L"rivestment challenge");
 		}
 	private:
 		std::shared_ptr<Matterbot> bot;

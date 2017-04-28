@@ -1,11 +1,7 @@
 #pragma once
 #include "Matterbot.h"
 #include "Md5.h"
-#include "Md5Utilities.h"
-#include "RivestmentPrompts.h"
 #include "Rivestment.h"
-
-#define HASHCOST 5
 
 namespace lospi
 {
@@ -15,19 +11,24 @@ namespace lospi
 		}
 
 		std::wstring get_help() override {
-			return L"points";
+			return L"";
 		}
 
 		std::wstring handle_command(const std::wstring &team, const std::wstring &channel,
 			const std::wstring &user, const std::wstring &command_text) override {
-
-			if (user != L"rivestment") {
-				return (L"");
+			if (inGame == false) {
+				return (L"Not currently registered in Rivestment. Enter by inputting 'mcbot rivestment begin'");
 			}
-
 			else {
-				points = std::stoi(command_text);
-				return (L"Points Updated");
+				if (user != L"rivestment") {
+					return (L"");
+				}
+
+				else {
+					points = std::stoi(command_text);
+					pointTotals.emplace(level, points);
+					return (L"");
+				}
 			}
 		}
 	};

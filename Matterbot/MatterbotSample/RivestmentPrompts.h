@@ -3,16 +3,12 @@
 #include "Md5.h"
 #include "Md5Utilities.h"
 #include "Rivestment.h"
-#include <map>
 #include <chrono>
-#include <thread>
-#include <sstream>
 #include <iterator> 
-#include <algorithm>
+#include <map>
+#include <sstream>
 #include <string>
-#define HASHCOST 5
-#define DEFAULT_RANGE 25
-#define MAX_RANGE 100
+#include <thread>
 
 namespace lospi
 {
@@ -29,7 +25,7 @@ namespace lospi
 		}
 
 		std::wstring get_help() override {
-			return L"`rivestment [CMD]`:\n\t`begin` Registers the user, sets the password. Level will begin at `1` and will be tuned.";
+			return L"`rivestment [CMD]`:\n\t`begin`: Registers the user, sets the password. Level will begin at " + std::to_wstring(STARTING_LVL) + L" and will be tuned automatically\n\t`lvlup`: Exits auto-level and increments the current level by 1\n\t`lvldown`: Exits auto-level and decrements the current level by 1\n\t`quit`: Removes McBot from the Rivestment program";
 		}
 
 		std::wstring handle_command(const std::wstring &team, const std::wstring &channel,
@@ -37,17 +33,17 @@ namespace lospi
 
 			//Invalid User
 			if (user != L"brentmckay") {
-				return (L"You are not allowed McBot use.");
+				return (L"You are not allowed McBot use");
 			}
 
 			//Challenge Logic
 			else if (command_text == L"begin") {
 				//Set Username
 				userName = L"McBot";
-				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 				//Register User
 				bot->post_message(L"rivestment register " + userName);
+				inGame = true;
 				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 				//Fetch Password
@@ -55,12 +51,14 @@ namespace lospi
 				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 				//Set Level
-				level = 3;
+				mapLevel = 0;
+				level = STARTING_LVL;
+				autoLvl = true;
 				bot->post_message(L"rivestment level " + std::to_wstring(level));
 				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 				//Set alphabet
-				alphabet = "josh";
+				alphabet = ALPHABET;
 				bot->post_message(L"Current Alphabet: " + string_to_wstring(alphabet));
 				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
@@ -68,22 +66,69 @@ namespace lospi
 				bot->post_message(L"Generating Lookup Tables");
 				generateMap();
 				bot->post_message(L"Lookup Tables Generated");
+				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 				//Fetch Current Point Total
 				bot->post_message(L"rivestment points");
-				std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-
-				//Find Optimal Range
-				//range = DEFAULT_RANGE;
-				range = std::min(int((points / HASHCOST)), MAX_RANGE);
+				while (!points) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				}
 
 				//Call For Challenges
-				bot->post_message(L"rivestment challenge");
+				lastRunTime = time(0);
+				bot->post_message(L"rivestment challenge " + std::to_wstring(findRange(level, points)));
 				return (L" `begin` complete");
+			}
+			else if (inGame == false) {
+				return (L"Not currently registered in Rivestment. Register by inputting 'mcbot rivestment begin'");
+			}
+			else if (command_text == L"lvlup") {
+				autoLvl = false;
+				if (level >= 7) {
+					return (L"Highest possible level is 7");
+				}
+				else {
+					//reset command
+					if (mapLevel >= level + LEVEL_RANGE) {
+						
+						level++;
+						bot->post_message(L"rivestment level " + std::to_wstring(level));
+
+						//Generate Map
+						bot->post_message(L"Generating Lookup Tables");
+						generateMap();
+						bot->post_message(L"Lookup Tables Generated");
+						std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+						//Fetch Current Point Total
+						bot->post_message(L"rivestment points");
+						while (!points) {
+							std::this_thread::sleep_for(std::chrono::milliseconds(10));
+						}
+
+						//Call For Challenges
+						lastRunTime = time(0);
+					}
+					return (L"rivestment challenge " + std::to_wstring(findRange(level, points)));
+				}
+			}
+			else if (command_text == L"lvldown") {
+				autoLvl = false;
+				if (level <= 1) {
+					return (L"Lowest possible level is 1");
+				}
+				else {
+					//reset command
+					return (L"rivestment level " + std::to_wstring(level - 1));
+				}
+			}
+			else if (command_text == L"quit") {
+				inGame = false;
+				return (L"rivestment quit");
 			}
 			//Invalid Command
 			else {
-				return (L"Invalid Command.");
+				return (L"Invalid Command");
 			}
 		}
 
